@@ -5,8 +5,7 @@ import com.pythonteam.models.Token;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Lexico {
 
@@ -19,11 +18,6 @@ public class Lexico {
     static
     {
         palabrasReservadas = new HashMap<String, Tipo>();
-        palabrasReservadas.put("boolean", Tipo.BOOL);
-        palabrasReservadas.put("else", Tipo.ELSE);
-        palabrasReservadas.put("false", Tipo.FALSE);
-        palabrasReservadas.put("if", Tipo.IF);
-        palabrasReservadas.put("int", Tipo.ENTERO);
         palabrasReservadas.put("main", Tipo.MAIN);
         palabrasReservadas.put("print", Tipo.PRINT);
         palabrasReservadas.put("read", Tipo.READ);
@@ -58,6 +52,41 @@ public class Lexico {
         cont = 0;
         buffer.seek(0);
 
+        Transiciones transiciones = new Transiciones();
+
+        transiciones.addTransition(0, 1, 'b');
+        transiciones.addTransition(1, 2, 'o');
+        transiciones.addTransition(2, 3, 'o');
+        transiciones.addTransition(3, 4, 'l');
+        transiciones.addTransition(4, 5, 'e');
+        transiciones.addTransition(5, 6, 'a');
+        transiciones.addTransition(6, 7, 'n');
+
+        transiciones.addTransition(0, 8, 'e');
+        transiciones.addTransition(8, 9, 'l');
+        transiciones.addTransition(9, 10, 's');
+        transiciones.addTransition(10, 11, 'e');
+
+        transiciones.addTransition(0, 12, 'f');
+        transiciones.addTransition(12, 8, 'a');
+
+        transiciones.addTransition(0, 13, 'i');
+        transiciones.addTransition(13, 14, 'f');
+
+        transiciones.addTransition(13, 15, 'n');
+        transiciones.addTransition(15, 16, 't');
+
+        
+
+
+        Set<Integer> acceptingStates = new HashSet<>(Arrays.asList(7,11,14,16));
+        DFA dfa = new DFA(transiciones, 0, acceptingStates);
+System.out.println(dfa.matches("fi"));
+System.out.println(dfa.matches("if"));
+System.out.println(dfa.matches("int"));
+
+
+System.exit(0);
         long si = buffer.length();
         caracter = getChar(buffer);
         while (cont <= si)
@@ -68,15 +97,19 @@ public class Lexico {
 
     private Token getToken(RandomAccessFile buffer) throws IOException {
 
+        // Los comentarios son omitidos durante la lectura del archivo
         if (caracter == '/')
         {
             caracter = getChar(buffer);
-            if (caracter == '/')
-            {
-                cont+=buffer.readLine().length()+1;
+            if (caracter == '/') {
+                cont += buffer.readLine().length() + 1;
                 caracter = getChar(buffer);
-                pos=1;
+                pos = 1;
                 line++;
+            }
+            else if(esNumero(caracter))
+            {
+                return new Token(Tipo.ENTRE, "/", line, pos );
             }
         }
         while (caracter == '\n' || caracter == '\t' || Character.isWhitespace(caracter))
@@ -176,7 +209,8 @@ public class Lexico {
         return esNumero(caracter) || esLetra(caracter);
     }
 
-    private char getChar(RandomAccessFile buffer) {
+    private char getChar(RandomAccessFile buffer)
+    {
         cont++;
         char result = 0;
         try {
@@ -187,12 +221,12 @@ public class Lexico {
         return result;
     }
 
-    boolean esLetra(char caracter)
+    private boolean esLetra(char caracter)
     {
         return (caracter >= 'a' && caracter <= 'z') || (caracter >= 'A' && caracter <= 'Z');
     }
 
-    boolean esNumero(char caracter)
+    private boolean esNumero(char caracter)
     {
         return (caracter > '0' && caracter < '9');
     }
