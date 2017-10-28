@@ -1,0 +1,41 @@
+package com.pythonteam.compilador.lexico;
+
+public enum Tipo {
+    MAIN,
+    ID,
+    ENTERO,
+    EOF,
+    ERROR,
+    CADENA,
+    AND,
+    OR,
+    MAYOR,
+    MENOR,
+    MAS,
+    MENOS,
+    POR,
+    ENTRE,
+    STRING,
+    BOOL,
+    INT,
+    IF,
+    ELSE,
+    WHILE,
+    PRINT,
+    READ,
+    TRUE,
+    FALSE,
+
+    PARENIZQ,
+    PARENDER,
+    LLAVEIZQ,
+    LLAVEDER,
+    COMA,
+    ASIGNACION,
+    EXCLAMACION,
+
+    EXPRESION,
+    DECLARACION,
+    OPERADOR,
+    TIPO
+}
