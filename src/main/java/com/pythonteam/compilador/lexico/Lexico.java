@@ -9,7 +9,6 @@ import java.util.*;
 
 public class Lexico {
 
-    private final static Map<String, Tipo> palabrasReservadas;
     private final static Map<Character, Tipo> puntuacion;
     int cont = 0;
     int pos = 1;
@@ -17,33 +16,24 @@ public class Lexico {
     char caracter;
     static
     {
-        palabrasReservadas = new HashMap<String, Tipo>();
-        palabrasReservadas.put("main", Tipo.MAIN);
-        palabrasReservadas.put("print", Tipo.PRINT);
-        palabrasReservadas.put("read", Tipo.READ);
-        palabrasReservadas.put("string", Tipo.STRING);
-        palabrasReservadas.put("true", Tipo.TRUE);
-        palabrasReservadas.put("while", Tipo.WHILE);
-
         puntuacion = new HashMap<Character, Tipo>();
-        puntuacion.put('(',Tipo.PARENIZQ);
-        puntuacion.put(')',Tipo.PARENDER);
-        puntuacion.put('{',Tipo.LLAVEIZQ);
-        puntuacion.put('}',Tipo.LLAVEDER);
-        puntuacion.put(',',Tipo.COMA);
-        puntuacion.put('=',Tipo.ASIGNACION);
-        puntuacion.put('!',Tipo.EXCLAMACION);
-        puntuacion.put('"',Tipo.CADENA);
-        puntuacion.put('&',Tipo.AND);
-        puntuacion.put('|',Tipo.OR);
-        puntuacion.put('"',Tipo.CADENA);
-        puntuacion.put('>',Tipo.MAYOR);
-        puntuacion.put('<',Tipo.MENOR);
-        puntuacion.put('*',Tipo.POR);
-        puntuacion.put('/',Tipo.ENTRE);
-        puntuacion.put('+',Tipo.MAS);
-        puntuacion.put('-',Tipo.MENOS);
+        puntuacion.put('(',Tipo.Delimitador);
+        puntuacion.put(')',Tipo.Delimitador);
+        puntuacion.put('{',Tipo.Delimitador);
+        puntuacion.put('}',Tipo.Delimitador);
+        puntuacion.put(',',Tipo.Delimitador);
+        puntuacion.put('!',Tipo.Delimitador);
+        puntuacion.put('"',Tipo.Delimitador);
+        puntuacion.put('&',Tipo.OperadorRelacional);
+        puntuacion.put('|',Tipo.OperadorRelacional);
+        puntuacion.put('"',Tipo.OperadorRelacional);
+        puntuacion.put('*',Tipo.OperadorAritmetico);
+        puntuacion.put('/',Tipo.OperadorAritmetico);
+        puntuacion.put('+',Tipo.OperadorAritmetico);
+        puntuacion.put('-',Tipo.OperadorAritmetico);
     }
+
+    private DFA palabrasReservadas;
 
     public Lexico(RandomAccessFile buffer) throws IOException {
         TablaSimbolos.empty();
@@ -52,41 +42,78 @@ public class Lexico {
         cont = 0;
         buffer.seek(0);
 
-        Transiciones transiciones = new Transiciones();
+        Transiciones TpalabrasReservadas = new Transiciones();
 
-        transiciones.addTransition(0, 1, 'b');
-        transiciones.addTransition(1, 2, 'o');
-        transiciones.addTransition(2, 3, 'o');
-        transiciones.addTransition(3, 4, 'l');
-        transiciones.addTransition(4, 5, 'e');
-        transiciones.addTransition(5, 6, 'a');
-        transiciones.addTransition(6, 7, 'n');
+        TpalabrasReservadas.addTransition(0, 1, 'b');
+        TpalabrasReservadas.addTransition(1, 2, 'o');
+        TpalabrasReservadas.addTransition(2, 3, 'o');
+        TpalabrasReservadas.addTransition(3, 4, 'l');
+        TpalabrasReservadas.addTransition(4, 5, 'e');
+        TpalabrasReservadas.addTransition(5, 6, 'a');
+        TpalabrasReservadas.addTransition(6, 7, 'n');
 
-        transiciones.addTransition(0, 8, 'e');
-        transiciones.addTransition(8, 9, 'l');
-        transiciones.addTransition(9, 10, 's');
-        transiciones.addTransition(10, 11, 'e');
+        TpalabrasReservadas.addTransition(0, 8, 'e');
+        TpalabrasReservadas.addTransition(8, 9, 'l');
+        TpalabrasReservadas.addTransition(9, 10, 's');
+        TpalabrasReservadas.addTransition(10, 11, 'e');
 
-        transiciones.addTransition(0, 12, 'f');
-        transiciones.addTransition(12, 8, 'a');
+        TpalabrasReservadas.addTransition(0, 12, 'f');
+        TpalabrasReservadas.addTransition(12, 13, 'a');
+        TpalabrasReservadas.addTransition(13, 14, 'l');
+        TpalabrasReservadas.addTransition(14, 15, 's');
+        TpalabrasReservadas.addTransition(15, 16, 'e');
 
-        transiciones.addTransition(0, 13, 'i');
-        transiciones.addTransition(13, 14, 'f');
+        TpalabrasReservadas.addTransition(0, 17, 'i');
+        TpalabrasReservadas.addTransition(17, 18, 'f');
 
-        transiciones.addTransition(13, 15, 'n');
-        transiciones.addTransition(15, 16, 't');
+
+        TpalabrasReservadas.addTransition(0, 19, 'i');
+        TpalabrasReservadas.addTransition(19, 20, 'n');
+        TpalabrasReservadas.addTransition(20, 21, 't');
+
+
+        TpalabrasReservadas.addTransition(0, 22, 'm');
+        TpalabrasReservadas.addTransition(22, 23, 'a');
+        TpalabrasReservadas.addTransition(23, 24, 'i');
+        TpalabrasReservadas.addTransition(24, 25, 'n');
+
+        TpalabrasReservadas.addTransition(0, 26, 'p');
+        TpalabrasReservadas.addTransition(26, 27, 'r');
+        TpalabrasReservadas.addTransition(27, 28, 'i');
+        TpalabrasReservadas.addTransition(28, 29, 'n');
+        TpalabrasReservadas.addTransition(29, 30, 't');
+
+        TpalabrasReservadas.addTransition(0, 31, 'r');
+        TpalabrasReservadas.addTransition(31, 32, 'e');
+        TpalabrasReservadas.addTransition(32, 33, 'a');
+        TpalabrasReservadas.addTransition(33, 34, 'd');
+
+        TpalabrasReservadas.addTransition(0, 35, 's');
+        TpalabrasReservadas.addTransition(36, 37, 't');
+        TpalabrasReservadas.addTransition(37, 38, 'r');
+        TpalabrasReservadas.addTransition(38, 39, 'i');
+        TpalabrasReservadas.addTransition(39, 40, 'n');
+        TpalabrasReservadas.addTransition(40, 41, 'g');
+
+        TpalabrasReservadas.addTransition(0, 42, 't');
+        TpalabrasReservadas.addTransition(42, 43, 'r');
+        TpalabrasReservadas.addTransition(43, 44, 'u');
+        TpalabrasReservadas.addTransition(44, 45, 'e');
+
+        TpalabrasReservadas.addTransition(0, 46, 'w');
+        TpalabrasReservadas.addTransition(46, 47, 'h');
+        TpalabrasReservadas.addTransition(47, 48, 'i');
+        TpalabrasReservadas.addTransition(48, 49, 'l');
+        TpalabrasReservadas.addTransition(49, 50, 'e');
+
+
 
         
 
 
-        Set<Integer> acceptingStates = new HashSet<>(Arrays.asList(7,11,14,16));
-        DFA dfa = new DFA(transiciones, 0, acceptingStates);
-System.out.println(dfa.matches("fi"));
-System.out.println(dfa.matches("if"));
-System.out.println(dfa.matches("int"));
+        Set<Integer> estadosFinales = new HashSet<>(Arrays.asList(7,11,14,16,18,21,25,30,34,41,45,50));
+        palabrasReservadas = new DFA(TpalabrasReservadas, 0, estadosFinales);
 
-
-System.exit(0);
         long si = buffer.length();
         caracter = getChar(buffer);
         while (cont <= si)
@@ -109,7 +136,7 @@ System.exit(0);
             }
             else if(esNumero(caracter))
             {
-                return new Token(Tipo.ENTRE, "/", line, pos );
+                return new Token(Tipo.OperadorAritmetico, "/", line, pos );
             }
         }
         while (caracter == '\n' || caracter == '\t' || Character.isWhitespace(caracter))
@@ -120,12 +147,7 @@ System.exit(0);
                 line++;
                 caracter = getChar(buffer);
             }
-            if(caracter == '\t')
-            {
-                pos++;
-                caracter = getChar(buffer);
-            }
-            if (!(caracter == '\n' || caracter == '\t') && Character.isWhitespace(caracter))
+            if (!(caracter == '\n') && Character.isWhitespace(caracter))
             {
                 pos++;
                 caracter = getChar(buffer);
@@ -151,7 +173,7 @@ System.exit(0);
             }
             if (!valido)
                 return new Token(Tipo.ERROR,palabra,line,pos);
-            return new Token(Tipo.INT,palabra,line,pos);
+            return new Token(Tipo.Numero,palabra,line,pos);
         }
         if (esLetra(caracter) )
         {
@@ -165,9 +187,9 @@ System.exit(0);
                 pos++;
                 caracter = getChar(buffer);
             }
-            Tipo tipo = palabrasReservadas.get(palabra);
-            if (tipo != null)
-                return new Token(tipo, palabra,line,pos-palabra.length());
+            //Tipo tipo = palabrasReservadas.matches(palabra);
+            if (palabrasReservadas.matches(palabra))
+                return new Token(Tipo.PalabraReservada, palabra,line,pos-palabra.length());
 
                 return new Token(Tipo.ID, palabra,line,pos-palabra.length());
         }
@@ -193,7 +215,45 @@ System.exit(0);
                 pos++;
                 caracter = getChar(buffer);
             }
-            return new Token(Tipo.CADENA,palabra+caracter,line,pos);
+            return new Token(Tipo.Texto,palabra+caracter,line,pos);
+        }
+        if (caracter == '<')
+        {
+            getChar(buffer);
+            pos++;
+            if (caracter == '=')
+            {
+                caracter = getChar(buffer);
+                pos++;
+                return new Token(Tipo.OperadorRelacional,"<=",line,pos);
+            }
+            return new Token(Tipo.OperadorRelacional, "<",line,pos);
+
+        }
+        if (caracter == '>')
+        {
+            getChar(buffer);
+            pos++;
+            if (caracter == '=')
+            {
+                caracter = getChar(buffer);
+                pos++;
+                return new Token(Tipo.OperadorRelacional,">=",line,pos);
+            }
+            return new Token(Tipo.OperadorRelacional, ">",line,pos);
+
+        }
+        if (caracter == '=')
+        {
+            getChar(buffer);
+            pos++;
+            if (caracter == '=')
+            {
+                caracter = getChar(buffer);
+                pos++;
+                return new Token(Tipo.OperadorRelacional,"==",line,pos);
+            }
+            return new Token(Tipo.OperadorRelacional, "=",line,pos);
         }
         Tipo tipo = puntuacion.get(caracter);
         char old = caracter;
