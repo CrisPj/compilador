@@ -13,11 +13,12 @@ import java.io.*;
 public class Gui extends JFrame {
     RSyntaxTextArea textArea;
     RandomAccessFile raf;
+    private JTable table;
 
     public Gui(){
         JPanel cp = new JPanel(new BorderLayout());
 
-        textArea = new RSyntaxTextArea(20, 60);
+        textArea = new RSyntaxTextArea(20, 30);
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
         textArea.setCodeFoldingEnabled(true);
         setJMenuBar(createMenuBar());
@@ -29,11 +30,15 @@ public class Gui extends JFrame {
         cp.add(statusPanel, BorderLayout.SOUTH);
         JLabel statusLabel = new JLabel("Listo");
         statusPanel.add(statusLabel, BorderLayout.WEST);
-        JProgressBar progressBar = new JProgressBar();
-        statusPanel.add(progressBar, BorderLayout.EAST);
         cp.add(sp);
 
         setContentPane(cp);
+        
+        JPanel panel = new JPanel();
+        cp.add(panel, BorderLayout.EAST);
+        
+        table = new JTable();
+        panel.add(table);
         setTitle("Text Editor Demo");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -42,15 +47,31 @@ public class Gui extends JFrame {
 
     private JMenuBar createMenuBar() {
         JMenuBar mb = new JMenuBar();
-        JMenu menu = new JMenu("Opciones");
+        JMenu mnArchivo = new JMenu("Archivo");
         JMenuItem open = new JMenuItem("Abrir archivo");
-        menu.add(open);
+        mnArchivo.add(open);
         open.addActionListener(e -> abrirArchivo());
-        JMenuItem compilar = new JMenuItem("Compilar");
-        compilar.addActionListener(e -> compilar());
-        menu.add(compilar);
-        menu.addSeparator();
-        mb.add(menu);
+        
+        JMenuItem guardar = new JMenuItem("Guardar");
+        mnArchivo.add(guardar);
+        mnArchivo.addSeparator();
+        mb.add(mnArchivo);
+        
+        JButton btnLex = new JButton("Lexico");
+        btnLex.setHorizontalAlignment(SwingConstants.RIGHT);
+        mb.add(btnLex);
+        
+        JButton btnSin = new JButton("Sintactico");
+        btnSin.setHorizontalAlignment(SwingConstants.RIGHT);
+        mb.add(btnSin);
+        
+        JButton btnSem = new JButton("Semantico");
+        btnSem.setHorizontalAlignment(SwingConstants.RIGHT);
+        mb.add(btnSem);
+        
+        JButton btnCompilar = new JButton("Compilar");
+        btnCompilar.setHorizontalAlignment(SwingConstants.RIGHT);
+        mb.add(btnCompilar);
         return mb;
     }
     private void abrirArchivo() {

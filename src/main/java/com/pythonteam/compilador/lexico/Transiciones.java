@@ -9,8 +9,8 @@ import java.util.stream.IntStream;
 public class Transiciones {
         private final Map<Integer, Map<Character, Integer>> function = new HashMap<>();
 
-        public void addTransition(Integer startState, Integer goalState, char character) {
-            function.computeIfAbsent(startState, k -> new HashMap<>()).put(character, goalState);
+        public void addTransicion(Integer estadoInicial, Integer estadoFinal, char caracter) {
+            function.computeIfAbsent(estadoInicial, k -> new HashMap<>()).put(caracter, estadoFinal);
         }
 
         private Optional<Integer> process(Integer startState, char character) {

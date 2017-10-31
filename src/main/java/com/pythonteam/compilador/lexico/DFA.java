@@ -9,9 +9,9 @@ public class DFA {
     private Set<Integer> estadoAceptados;
 
     public DFA(Transiciones transiciones, int inicial, Set<Integer> estadoAceptados) {
-        this.transiciones = Objects.requireNonNull(transiciones, "Transition function is null.");
+        this.transiciones = Objects.requireNonNull(transiciones, "No puede ser null");
         this.inicial = inicial;
-        this.estadoAceptados = Objects.requireNonNull(estadoAceptados, "Accepting state set is null.");
+        this.estadoAceptados = Objects.requireNonNull(estadoAceptados, "Estado final no puede ser null");
     }
 
     public boolean matches(String text) {
