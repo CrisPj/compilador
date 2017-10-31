@@ -14,7 +14,7 @@ public class TablaSimbolos {
         String result = "ID - LEXEMA - LINEA - POSICION - VALOR\n";
         for (Token token:  tokens)
         {
-            result += token.tipo + "-" + token.tipo.ordinal() + " --- " + token.lexema+" --- "+token.linea+" --- "+token.posicion+" --- "+token.valor+"\n";
+            result += token.tipo.ordinal() + " --- " + token.lexema+" --- "+token.linea+" --- "+token.posicion+" --- "+token.valor+"\n";
         }
         return result;
     }
