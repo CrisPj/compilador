@@ -10,6 +10,7 @@ import java.util.*;
 public class Lexico {
 
     private final static Map<Character, Tipo> puntuacion;
+    private final DFA numero;
     int cont = 0;
     int pos = 1;
     int line = 1;
@@ -41,6 +42,31 @@ public class Lexico {
         line = 1;
         cont = 0;
         buffer.seek(0);
+
+        Transiciones TNumero = new Transiciones();
+        TNumero.addTransition(0,1,'1');
+        TNumero.addTransition(0,1,'2');
+        TNumero.addTransition(0,1,'3');
+        TNumero.addTransition(0,1,'4');
+        TNumero.addTransition(0,1,'5');
+        TNumero.addTransition(0,1,'6');
+        TNumero.addTransition(0,1,'7');
+        TNumero.addTransition(0,1,'8');
+        TNumero.addTransition(0,1,'9');
+
+        TNumero.addTransition(1,1,'0');
+        TNumero.addTransition(1,1,'1');
+        TNumero.addTransition(1,1,'2');
+        TNumero.addTransition(1,1,'3');
+        TNumero.addTransition(1,1,'4');
+        TNumero.addTransition(1,1,'5');
+        TNumero.addTransition(1,1,'6');
+        TNumero.addTransition(1,1,'7');
+        TNumero.addTransition(1,1,'8');
+        TNumero.addTransition(1,1,'9');
+
+        Set<Integer> estadosFinalesNum = new HashSet<>(Arrays.asList(1));
+        numero = new DFA(TNumero, 0, estadosFinalesNum);
 
         Transiciones TpalabrasReservadas = new Transiciones();
 
@@ -105,10 +131,6 @@ public class Lexico {
         TpalabrasReservadas.addTransition(47, 48, 'i');
         TpalabrasReservadas.addTransition(48, 49, 'l');
         TpalabrasReservadas.addTransition(49, 50, 'e');
-
-
-
-        
 
 
         Set<Integer> estadosFinales = new HashSet<>(Arrays.asList(7,11,14,16,18,21,25,30,34,41,45,50));
@@ -245,7 +267,7 @@ public class Lexico {
         }
         if (caracter == '=')
         {
-            getChar(buffer);
+            caracter = getChar(buffer);
             pos++;
             if (caracter == '=')
             {
@@ -253,7 +275,7 @@ public class Lexico {
                 pos++;
                 return new Token(Tipo.OperadorRelacional,"==",line,pos);
             }
-            return new Token(Tipo.OperadorRelacional, "=",line,pos);
+            return new Token(Tipo.OperadorAritmetico, "=",line,pos);
         }
         Tipo tipo = puntuacion.get(caracter);
         char old = caracter;
