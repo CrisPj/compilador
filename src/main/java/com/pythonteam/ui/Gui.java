@@ -7,6 +7,8 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.io.*;
 
@@ -14,6 +16,8 @@ public class Gui extends JFrame {
     RSyntaxTextArea textArea;
     RandomAccessFile raf;
     private JTable table;
+    private JButton btnLex;
+    private JButton btnSin;
 
     public Gui(){
         JPanel cp = new JPanel(new BorderLayout());
@@ -33,16 +37,40 @@ public class Gui extends JFrame {
         cp.add(sp);
 
         setContentPane(cp);
-        
+
         JPanel panel = new JPanel();
         cp.add(panel, BorderLayout.EAST);
-        
+
         table = new JTable();
         panel.add(table);
         setTitle("Text Editor Demo");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                activarBotones();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                activarBotones();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+
+            }
+        });
         setLocationRelativeTo(null);
+    }
+
+    private void activarBotones() {
+        btnLex.setEnabled(true);
+    }
+
+    private void activar() {
+
     }
 
     private JMenuBar createMenuBar() {
@@ -51,29 +79,81 @@ public class Gui extends JFrame {
         JMenuItem open = new JMenuItem("Abrir archivo");
         mnArchivo.add(open);
         open.addActionListener(e -> abrirArchivo());
-        
+
         JMenuItem guardar = new JMenuItem("Guardar");
         mnArchivo.add(guardar);
-        mnArchivo.addSeparator();
+        guardar.addActionListener(e -> guardarUi());
         mb.add(mnArchivo);
-        
-        JButton btnLex = new JButton("Lexico");
+
+        btnLex = new JButton("Lexico");
         btnLex.setHorizontalAlignment(SwingConstants.RIGHT);
+        btnLex.addActionListener(e -> hacerLexico());
         mb.add(btnLex);
-        
-        JButton btnSin = new JButton("Sintactico");
+
+        btnSin = new JButton("Sintactico");
         btnSin.setHorizontalAlignment(SwingConstants.RIGHT);
+        btnSin.addActionListener(e -> hacerSintactico());
+        btnSin.setEnabled(false);
         mb.add(btnSin);
-        
+
         JButton btnSem = new JButton("Semantico");
         btnSem.setHorizontalAlignment(SwingConstants.RIGHT);
+        btnSem.addActionListener(e -> hacerSemantico());
+        btnSem.setEnabled(false);
         mb.add(btnSem);
-        
+
         JButton btnCompilar = new JButton("Compilar");
         btnCompilar.setHorizontalAlignment(SwingConstants.RIGHT);
+        btnCompilar.setEnabled(false);
+        btnCompilar.addActionListener(e -> hacerLexico());
         mb.add(btnCompilar);
         return mb;
     }
+
+    private void guardarUi() {
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showSaveDialog(this);
+        if (result==JFileChooser.APPROVE_OPTION) {
+            guardarArchivo(fileChooser.getSelectedFile().getPath());
+        }
+    }
+
+    private void hacerSemantico() {
+
+    }
+
+    private void hacerSintactico() {
+    }
+
+    private void hacerLexico()
+    {
+        guardarArchivo("temp.cm");
+        try {
+            Compilador comp = new Compilador(raf);
+            btnLex.setBackground(Color.GREEN);
+            btnLex.setEnabled(false);
+            btnSin.setEnabled(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            btnLex.setBackground(Color.RED);
+        }
+    }
+
+    private void guardarArchivo(String nombre)
+    {
+        try {
+            File file = new File(nombre);
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            output.write(textArea.getText());
+            output.close();
+            file = new File(nombre);
+            raf = new RandomAccessFile(file, "rw");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void abrirArchivo() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
@@ -94,16 +174,6 @@ public class Gui extends JFrame {
     }
 
     private void compilar() {
-        try {
-            File file = new File("temp.cm");
-            BufferedWriter output = new BufferedWriter(new FileWriter(file));
-            output.write(textArea.getText());
-            output.close();
-            file = new File("temp.cm");
-            raf = new RandomAccessFile(file, "rw");
-            Compilador comp = new Compilador(raf);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 }
