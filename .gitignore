@@ -1,3 +1,6 @@
 .idea/
 target/
 temp.cm
+.classpath
+.project
+.settings/
