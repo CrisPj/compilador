@@ -374,7 +374,7 @@ public class Lexico {
             getChar();
             return new Token(Tipo.Delimitador, lexema, line, pos-2);
         }
-        else if (caracter == '\uFFFF')
+        else if (caracter == '\uFFFF' && lexema.length() == 0)
         {
             lexema = ""+caracter;
             getChar();
@@ -420,10 +420,5 @@ public class Lexico {
     private boolean esNumero(char caracter)
     {
         return (caracter > '0' && caracter < '9');
-    }
-
-    public void imprimir() {
-        System.out.println(TablaSimbolos.impr());
-        System.out.println(TablaSimbolos.getErrors());
     }
 }

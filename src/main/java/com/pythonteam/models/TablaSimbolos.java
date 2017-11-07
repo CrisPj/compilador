@@ -2,14 +2,16 @@ package com.pythonteam.models;
 
 import com.pythonteam.compilador.lexico.Tipo;
 
-import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TablaSimbolos {
-   static ArrayDeque<Token> tokens = new ArrayDeque<>();
+//   static ArrayDeque<Token> tokens = new ArrayDeque<>();
+   static HashMap<String, Token> tokens = new HashMap<>();
+   static HashMap<String, Token> errores = new HashMap<>();
    static Map<String, Integer> ids = new HashMap<>();
    static int aid = 100;
+    static Object data[][];
 
    static {
        ids.put("boolean",0);
@@ -40,44 +42,66 @@ public class TablaSimbolos {
        ids.put("&",54);
    }
 
+
     public static void add(Token token)
     {
-        tokens.add(token);
+        if (token.tipo == Tipo.ERROR)
+            errores.put(token.lexema, token);
+        else
+            tokens.put(token.lexema,token);
     }
 
 
     public static String getErrors()
     {
-        String result = "\u001B[31m"+"Errores:\n";
-        for (Token token:tokens) {
-            if (token.tipo == Tipo.ERROR)
-                result += "Error en la línea:" + token.linea + " caracter: " + token.posicion + "\n";
+        String result ="Errores:\n";
+        for (Token token:errores.values()) {
+            result += "Error en la línea:" + token.linea + " caracter: " + token.posicion + "\n";
         }
         return result;
     }
 
-    public static String impr() {
-        String result = "\u001B[0m"+"ID General - Id especifico - LEXEMA - LINEA - POSICION - VALOR\n";
-        for (Token token:  tokens) {
+    public static void genData() {
+       data = new Object[size()][7];
+        int index = 0;
+        for (Token tok : tokens.values()) {
             int id = 0;
-            if (token.tipo == Tipo.ID) {
+            if (tok.tipo == Tipo.ID) {
                 id = aid;
                 aid++;
             }
-            else if (token.tipo == Tipo.EOF || token.tipo == Tipo.Texto || token.tipo == Tipo.ERROR)
+            else if (tok.tipo == Tipo.EOF || tok.tipo == Tipo.Texto)
             {
                 id=0;
             }
             else
-                id = ids.get(token.lexema) == null ? 0 : ids.get(token.lexema);
+                id = ids.get(tok.lexema) == null ? 0 : ids.get(tok.lexema);
 
-
-           result += token.tipo.ordinal() + " --- " + id + " --- " + token.lexema+" --- "+token.linea+" --- "+token.posicion+" --- "+token.valor+"\n";
+            data[index][0] = tok.tipo.ordinal();
+            data[index][1] = id;
+            data[index][2] = tok.lexema;
+            data[index][3] = tok.posicion;
+            data[index][4] = tok.linea;
+            data[index][5] = tok.valor;
+            data[index][6] = tok.clasificacion;
+            index++;
         }
-        return result;
     }
 
     public static void empty() {
         tokens.clear();
+        errores.clear();
+    }
+
+    public static boolean hayErrores() {
+        return errores.isEmpty();
+    }
+
+    public static int size() {
+        return tokens.size();
+    }
+
+    public static Object[][] getData() {
+        return data;
     }
 }

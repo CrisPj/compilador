@@ -1,16 +1,35 @@
 package com.pythonteam.ui;
 
 import com.pythonteam.compilador.Compilador;
+import com.pythonteam.models.TablaSimbolos;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import javax.swing.*;
-import javax.swing.border.BevelBorder;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.io.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class Gui extends JFrame {
     RSyntaxTextArea textArea;
@@ -18,34 +37,34 @@ public class Gui extends JFrame {
     private JTable table;
     private JButton btnLex;
     private JButton btnSin;
+    private final JTextArea area;
 
     public Gui(){
-        JPanel cp = new JPanel(new BorderLayout());
+        JPanel cp = new JPanel();
 
         textArea = new RSyntaxTextArea(20, 30);
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
         textArea.setCodeFoldingEnabled(true);
         setJMenuBar(createMenuBar());
         RTextScrollPane sp = new RTextScrollPane(textArea);
-        JPanel statusPanel = new JPanel();
-        statusPanel.setPreferredSize(new Dimension(cp.getWidth(), 16));
-        statusPanel.setLayout(new BorderLayout());
-        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        cp.add(statusPanel, BorderLayout.SOUTH);
-        JLabel statusLabel = new JLabel("Listo");
-        statusPanel.add(statusLabel, BorderLayout.WEST);
-        cp.add(sp);
+        sp.setBounds(0, 0, 398, 343);
+        cp.setLayout(new BorderLayout());
+        cp.add(sp, BorderLayout.CENTER);
+        area = new JTextArea();
+        area.setRows(8);
+        area.setEditable(false);
+        Font font = area.getFont();
+        float size = font.getSize() + 4.0f;
+        area.setFont( font.deriveFont(size) );
+        JScrollPane scroll = new JScrollPane(area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll.setBorder(new TitledBorder("Consola de Errores"));
+        cp.add(scroll, BorderLayout.SOUTH);
 
         setContentPane(cp);
 
-        JPanel panel = new JPanel();
-        cp.add(panel, BorderLayout.EAST);
-
-        table = new JTable();
-        panel.add(table);
-        setTitle("Text Editor Demo");
+        setTitle("Cmenos");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        pack();
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
@@ -63,10 +82,14 @@ public class Gui extends JFrame {
             }
         });
         setLocationRelativeTo(null);
+        setBounds(200,200,600,500);
+
     }
 
     private void activarBotones() {
         btnLex.setEnabled(true);
+        btnLex.setBackground(Color.ORANGE);
+        btnSin.setEnabled(false);
     }
 
     private void activar() {
@@ -87,6 +110,7 @@ public class Gui extends JFrame {
 
         btnLex = new JButton("Lexico");
         btnLex.setHorizontalAlignment(SwingConstants.RIGHT);
+        btnLex.setBackground(Color.ORANGE);
         btnLex.addActionListener(e -> hacerLexico());
         mb.add(btnLex);
 
@@ -130,9 +154,30 @@ public class Gui extends JFrame {
         guardarArchivo("temp.cm");
         try {
             Compilador comp = new Compilador(raf);
-            btnLex.setBackground(Color.GREEN);
-            btnLex.setEnabled(false);
-            btnSin.setEnabled(true);
+            if (!TablaSimbolos.hayErrores())
+            {
+                btnLex.setBackground(Color.RED);
+                area.setForeground(Color.RED);
+                area.setText(TablaSimbolos.getErrors());
+            }
+            else {
+                btnLex.setBackground(Color.GREEN);
+                btnLex.setEnabled(false);
+                btnSin.setEnabled(true);
+                TablaSimbolos.genData();
+                Object[][] tableData = TablaSimbolos.getData();
+                Object[] das =new Object[]{"ID General","Id Tipo","Lexema","Posicion","Linea", "Valor","Clasificacion"};
+                DefaultTableModel dt = new DefaultTableModel(tableData,das);
+                JTable tabla = new JTable(dt);
+                final JDialog frame = new JDialog(this, "Tabla de simbolos", true);
+                frame.setLayout(new BorderLayout());
+                frame.getContentPane().add(new JScrollPane(tabla, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                        BorderLayout.CENTER);
+                frame.setLocationRelativeTo(null);
+                frame.pack();
+                frame.setVisible(true);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             btnLex.setBackground(Color.RED);
