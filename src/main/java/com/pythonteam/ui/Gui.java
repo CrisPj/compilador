@@ -166,7 +166,7 @@ public class Gui extends JFrame {
                 btnSin.setEnabled(true);
                 TablaSimbolos.genData();
                 Object[][] tableData = TablaSimbolos.getData();
-                Object[] das =new Object[]{"ID General","Id Tipo","Lexema","Posicion","Linea", "Valor","Clasificacion"};
+                Object[] das =new Object[]{"ID","ID General","Id Tipo","Lexema","Posicion","Linea", "Valor","Clasificacion"};
                 DefaultTableModel dt = new DefaultTableModel(tableData,das);
                 JTable tabla = new JTable(dt);
                 final JDialog frame = new JDialog(this, "Tabla de simbolos", true);

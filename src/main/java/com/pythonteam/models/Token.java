@@ -4,6 +4,7 @@ import com.pythonteam.compilador.lexico.Tipo;
 
 public class Token {
 
+    int id;
     Tipo tipo;
     String lexema;
     int posicion;

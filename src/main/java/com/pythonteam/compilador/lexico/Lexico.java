@@ -214,6 +214,7 @@ public class Lexico {
 
         Transiciones TNumero = new Transiciones();
         TNumero.addTransicion(0,1,'1');
+        TNumero.addTransicion(0,1,'0');
         TNumero.addTransicion(0,1,'2');
         TNumero.addTransicion(0,1,'3');
         TNumero.addTransicion(0,1,'4');
@@ -313,6 +314,16 @@ public class Lexico {
     private Token getToken(RandomAccessFile buffer) throws IOException {
 
         // Los comentarios son omitidos durante la lectura del archivo
+        if (caracter == '\n')
+        {
+            int antPos,antLine;
+            antPos = pos;
+            antLine = line;
+            pos = 1;
+            line++;
+            getChar();
+            return new Token(Tipo.Numero, "SALTO",antLine,antPos);
+        }
         if (caracter == '/')
         {
             getChar();
@@ -356,25 +367,25 @@ public class Lexico {
         {
             return new Token(Tipo.ID, lexema, line, pos-lexema.length());
         }
-        else if (DFAOpAritmeticos.matches(""+caracter))
+        else if (DFAOpAritmeticos.matches(""+caracter)  && lexema.length() == 0)
         {
             lexema = ""+caracter;
             getChar();
             return new Token(Tipo.OperadorAritmetico, lexema, line, pos-2);
         }
-        else if (DFAOpRel.matches(""+caracter))
+        else if (DFAOpRel.matches(""+caracter) && lexema.length() == 0)
         {
             lexema = ""+caracter;
             getChar();
             return new Token(Tipo.OperadorRelacional, lexema, line, pos-2);
         }
-        else if (DFADelim.matches(""+caracter))
+        else if (DFADelim.matches(""+caracter) && lexema.length() == 0)
         {
             lexema = ""+caracter;
             getChar();
             return new Token(Tipo.Delimitador, lexema, line, pos-2);
         }
-        else if (caracter == '\uFFFF' && lexema.length() == 0)
+        else if (caracter == '\uFFFF'&& lexema.length() == 0)
         {
             lexema = ""+caracter;
             getChar();
@@ -390,19 +401,9 @@ public class Lexico {
 
     private void quitarEspacios()
     {
-        while (caracter == '\n' || caracter == '\t' || Character.isWhitespace(caracter))
+        while (caracter == '\t' || Character.isWhitespace(caracter))
         {
-            if (caracter == '\n')
-            {
-                pos = 1;
-                line++;
                 getChar();
-            }
-            if (!(caracter == '\n') && Character.isWhitespace(caracter))
-            {
-                getChar();
-            }
-
         }
     }
 
