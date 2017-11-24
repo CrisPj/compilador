@@ -7,9 +7,7 @@ import java.io.RandomAccessFile;
 
 public class Compilador {
     public Compilador(RandomAccessFile buffer) throws IOException {
-        Lexico lex = new Lexico(buffer);
-        Sintactico sin = new Sintactico();
-        Semantico semantico = new Semantico();
+
 
     }
 }

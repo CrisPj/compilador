@@ -1,23 +1,15 @@
 package com.pythonteam.ui;
 
 import com.pythonteam.compilador.Compilador;
+import com.pythonteam.compilador.PilaErrores;
+import com.pythonteam.compilador.lexico.Lexico;
+import com.pythonteam.compilador.sintactico.Sintactico;
 import com.pythonteam.models.TablaSimbolos;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -37,6 +29,7 @@ public class Gui extends JFrame {
     private JTable table;
     private JButton btnLex;
     private JButton btnSin;
+    private JButton btnSem;
     private final JTextArea area;
 
     public Gui(){
@@ -90,6 +83,10 @@ public class Gui extends JFrame {
         btnLex.setEnabled(true);
         btnLex.setBackground(Color.ORANGE);
         btnSin.setEnabled(false);
+        btnSin.setBackground(Color.ORANGE);
+        btnSem.setEnabled(false);
+        btnSem.setBackground(Color.ORANGE);
+        area.setText("");
     }
 
     private void activar() {
@@ -120,7 +117,7 @@ public class Gui extends JFrame {
         btnSin.setEnabled(false);
         mb.add(btnSin);
 
-        JButton btnSem = new JButton("Semantico");
+        btnSem = new JButton("Semantico");
         btnSem.setHorizontalAlignment(SwingConstants.RIGHT);
         btnSem.addActionListener(e -> hacerSemantico());
         btnSem.setEnabled(false);
@@ -143,17 +140,32 @@ public class Gui extends JFrame {
     }
 
     private void hacerSemantico() {
-
+        JOptionPane.showMessageDialog(this,"En construccion");
     }
 
     private void hacerSintactico() {
+        PilaErrores.limpiar();
+        Sintactico sintactico = new Sintactico();
+        if (!PilaErrores.empty())
+        {
+            btnSin.setBackground(Color.RED);
+            btnSin.setEnabled(false);
+            area.setForeground(Color.RED);
+            area.setText(area.getText() + "\n Sintacticos" + PilaErrores.getSintacticoErrors());
+
+        }else {
+            btnSin.setBackground(Color.GREEN);
+            btnSin.setEnabled(false);
+            btnSem.setBackground(Color.ORANGE);
+            btnSem.setEnabled(true);
+        }
     }
 
     private void hacerLexico()
     {
         guardarArchivo("temp.cm");
         try {
-            Compilador comp = new Compilador(raf);
+            Lexico lex = new Lexico(raf);
             if (!TablaSimbolos.hayErrores())
             {
                 btnLex.setBackground(Color.RED);

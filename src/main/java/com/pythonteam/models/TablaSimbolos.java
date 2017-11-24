@@ -39,6 +39,7 @@ public class TablaSimbolos {
        ids.put("!",52);
        ids.put("|",53);
        ids.put("&",54);
+       ids.put(";",55);
    }
 
 
@@ -101,6 +102,7 @@ public class TablaSimbolos {
 
             data[index][0] = tok.id;
             data[index][1] = tok.tipo.ordinal();
+            tok.setIdGen(id);
             data[index][2] = id;
             data[index][3] = tok.lexema;
             data[index][4] = tok.posicion;
@@ -128,5 +130,13 @@ public class TablaSimbolos {
 
     public static Object[][] getData() {
         return data;
+    }
+
+    public static Token get(int i) {
+        return tokens.get(i);
+    }
+
+    public static ArrayList<Token> getTokens() {
+        return tokens;
     }
 }

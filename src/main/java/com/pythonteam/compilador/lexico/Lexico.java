@@ -6,6 +6,7 @@ import com.pythonteam.models.Token;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ public class Lexico {
 
         delimitadores.add('(');
         delimitadores.add(')');
+        delimitadores.add(';');
         delimitadores.add('{');
         delimitadores.add('}');
         delimitadores.add(',');
@@ -66,7 +68,7 @@ public class Lexico {
         TOperadoresAritmeticos.addTransicion(0,1,'=');
         TOperadoresAritmeticos.addTransicion(0,1,'*');
         TOperadoresAritmeticos.addTransicion(0,1,'/');
-        Set<Integer> estadosFinalesOPArit = new HashSet<>(Arrays.asList(1));
+        Set<Integer> estadosFinalesOPArit = new HashSet<>(Collections.singletonList(1));
         DFAOpAritmeticos = new DFA(TOperadoresAritmeticos, 0, estadosFinalesOPArit);
 
 
@@ -84,6 +86,7 @@ public class Lexico {
         TDelim.addTransicion(0,1,'(');
         TDelim.addTransicion(0,1,')');
         TDelim.addTransicion(0,1,'{');
+        TDelim.addTransicion(0,1,';');
         TDelim.addTransicion(0,1,'}');
         TDelim.addTransicion(0,1,',');
         Set<Integer> estadosFinalesDelim= new HashSet<>(Arrays.asList(1));
@@ -316,13 +319,9 @@ public class Lexico {
         // Los comentarios son omitidos durante la lectura del archivo
         if (caracter == '\n')
         {
-            int antPos,antLine;
-            antPos = pos;
-            antLine = line;
             pos = 1;
             line++;
             getChar();
-            return new Token(Tipo.Numero, "SALTO",antLine,antPos);
         }
         if (caracter == '/')
         {
@@ -348,6 +347,8 @@ public class Lexico {
             {
                 lexema +=caracter;
                 getChar();
+                if (caracter == '\uFFFF')
+                    return new Token(Tipo.ERROR, "ERROR",line, pos);
             }
             lexema+=caracter;
             getChar();
