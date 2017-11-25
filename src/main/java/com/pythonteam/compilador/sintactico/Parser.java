@@ -99,7 +99,7 @@ public class Parser {
         return new WhileLoop(cabeza, cuerpo);
     }
 
-    private IfStmt parseIf() {
+    private SentenciaIf parseIf() {
         consume(3);
         consume(31);
         Expresion condicion = parseExpr();
@@ -109,12 +109,12 @@ public class Parser {
         {
             consume(1);
             Sentencia elses = parseSentencia();
-            return new IfStmt(condicion, then, elses);
+            return new SentenciaIf(condicion, then, elses);
         }
         else
         {
 
-            return new IfStmt(condicion,then);
+            return new SentenciaIf(condicion,then);
         }
     }
 

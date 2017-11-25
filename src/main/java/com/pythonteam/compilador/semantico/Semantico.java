@@ -1,8 +1,19 @@
 package com.pythonteam.compilador.semantico;
 
-import com.pythonteam.compilador.AST.*;
+import com.pythonteam.compilador.AST.ASTVisitante;
+import com.pythonteam.compilador.AST.BoolConst;
+import com.pythonteam.compilador.AST.IntConst;
+import com.pythonteam.compilador.AST.Sentencia;
+import com.pythonteam.compilador.AST.SentenciaIf;
+import com.pythonteam.compilador.AST.StringConst;
+import com.pythonteam.compilador.AST.Var;
+import com.pythonteam.compilador.AST.WhileLoop;
 import com.pythonteam.compilador.Errores.PilaErrores;
-import com.pythonteam.compilador.sintactico.*;
+import com.pythonteam.compilador.sintactico.Asignacion;
+import com.pythonteam.compilador.sintactico.BinOp;
+import com.pythonteam.compilador.sintactico.Bloque;
+import com.pythonteam.compilador.sintactico.Declaracion;
+import com.pythonteam.compilador.sintactico.UnaryOp;
 
 import java.util.HashMap;
 
@@ -41,8 +52,33 @@ public class Semantico {
         }
 
         @Override
-        public void visitar(IfStmt ifStmt) {
-            super.visitar(ifStmt);
+        public void visitar(WhileLoop whileLoop) {
+            whileLoop.condicion.aceptar(this);
+            if (tipo != TipoBool.instance)
+            {
+                PilaErrores.addSemantico("While debe ser bool");
+            }
+            pilaSemantica.pushBloque();
+            whileLoop.sentencias.aceptar(this);
+            pilaSemantica.popBloque();
+            tipo = new TipoNull();
+        }
+
+        @Override
+        public void visitar(SentenciaIf sentenciaIf) {
+            sentenciaIf.condicionBooleana.aceptar(this);
+            if (tipo != TipoBool.instance)
+            {
+                PilaErrores.addSemantico("If fue " + tipo.toString());
+            }
+            pilaSemantica.pushBloque();
+            sentenciaIf.then.aceptar(this);
+            pilaSemantica.popBloque();
+            pilaSemantica.pushBloque();
+            sentenciaIf.parteElse.aceptar(this);
+            pilaSemantica.popBloque();
+
+            tipo = new TipoNull();
         }
 
         @Override
@@ -106,7 +142,7 @@ public class Semantico {
             {
                 PilaErrores.addSemantico("Tipo incompatibles en " + binOp.nombre);
             }
-            tipo = new TipoNull();
+            else tipo=TipoBool.instance;
         }
 
         @Override

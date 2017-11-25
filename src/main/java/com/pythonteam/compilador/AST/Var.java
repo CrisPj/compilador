@@ -11,22 +11,4 @@ public class Var implements  Expresion{
         v.visitar(this);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Var) {
-            return this.name.equals(((Var)obj).name);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

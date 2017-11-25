@@ -3,9 +3,9 @@ package com.pythonteam.compilador.AST;
 import com.pythonteam.compilador.sintactico.*;
 
 public abstract class ASTVisitante {
-    public void visitar(IfStmt ifStmt) {}
+    public void visitar(SentenciaIf sentenciaIf) {}
     public void visitar(Bloque bloque) {}
-    public void visitar(EmptyStatement emptyStatement) {}
+    public void visitar(SentenciaVacia sentenciaVacia) {}
     public void visitar(WhileLoop whileLoop) {}
     public void visitar(Print whileLoop) {}
     public void visitar(Read whileLoop) {}

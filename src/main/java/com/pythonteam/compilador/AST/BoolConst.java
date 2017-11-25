@@ -1,10 +1,10 @@
 package com.pythonteam.compilador.AST;
 
 public class BoolConst implements Expresion {
-    public final boolean value;
+    public final boolean valor;
 
-    public BoolConst(boolean value) {
-        this.value = value;
+    public BoolConst(boolean valor) {
+        this.valor = valor;
     }
 
     public void aceptar(ASTVisitante v) {
@@ -14,7 +14,7 @@ public class BoolConst implements Expresion {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof BoolConst) {
-            return this.value == ((BoolConst)obj).value;
+            return this.valor == ((BoolConst)obj).valor;
         } else {
             return false;
         }
@@ -22,11 +22,11 @@ public class BoolConst implements Expresion {
 
     @Override
     public int hashCode() {
-        return value ? 1 : 0;
+        return valor ? 1 : 0;
     }
 
     @Override
     public String toString() {
-        return ""+value;
+        return ""+ valor;
     }
 }
