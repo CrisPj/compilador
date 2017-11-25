@@ -108,7 +108,6 @@ public class TablaSimbolos {
             data[index][4] = tok.posicion;
             data[index][5] = tok.linea;
             data[index][6] = tok.valor;
-            data[index][7] = tok.clasificacion;
             index++;
         }
     }

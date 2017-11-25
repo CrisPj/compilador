@@ -1,6 +1,5 @@
 package com.pythonteam.ui;
 
-import com.pythonteam.compilador.Compilador;
 import com.pythonteam.compilador.PilaErrores;
 import com.pythonteam.compilador.lexico.Lexico;
 import com.pythonteam.compilador.sintactico.Sintactico;
@@ -9,7 +8,18 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -24,13 +34,18 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class Gui extends JFrame {
-    RSyntaxTextArea textArea;
-    RandomAccessFile raf;
+    private RSyntaxTextArea textArea;
+    private RandomAccessFile raf;
     private JTable table;
+    private Color color;
     private JButton btnLex;
     private JButton btnSin;
     private JButton btnSem;
     private final JTextArea area;
+    private DefaultTableModel dt;
+    private Object[][] tableData;
+    private final Object[] title;
+    private JButton btnCompilar;
 
     public Gui(){
         JPanel cp = new JPanel();
@@ -39,20 +54,29 @@ public class Gui extends JFrame {
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
         textArea.setCodeFoldingEnabled(true);
         setJMenuBar(createMenuBar());
+        color = btnSin.getBackground();
         RTextScrollPane sp = new RTextScrollPane(textArea);
         sp.setBounds(0, 0, 398, 343);
         cp.setLayout(new BorderLayout());
         cp.add(sp, BorderLayout.CENTER);
         area = new JTextArea();
-        area.setRows(8);
+        area.setRows(6);
         area.setEditable(false);
         Font font = area.getFont();
         float size = font.getSize() + 4.0f;
         area.setFont( font.deriveFont(size) );
         JScrollPane scroll = new JScrollPane(area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        TablaSimbolos.genData();
+        tableData = TablaSimbolos.getData();
+        title = new Object[]{"ID","ID General","Id Tipo","Lexema","Posicion","Linea", "Valor"};
+        dt = new DefaultTableModel(tableData, title);
+        table = new JTable(dt);
+        JScrollPane scroll2 = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setBorder(new TitledBorder("Consola de Errores"));
         cp.add(scroll, BorderLayout.SOUTH);
+        cp.add(scroll2, BorderLayout.EAST);
 
         setContentPane(cp);
 
@@ -75,7 +99,7 @@ public class Gui extends JFrame {
             }
         });
         setLocationRelativeTo(null);
-        setBounds(200,200,600,500);
+        setBounds(200,0,1128,650);
 
     }
 
@@ -83,19 +107,23 @@ public class Gui extends JFrame {
         btnLex.setEnabled(true);
         btnLex.setBackground(Color.ORANGE);
         btnSin.setEnabled(false);
-        btnSin.setBackground(Color.ORANGE);
+        btnSin.setBackground(color);
         btnSem.setEnabled(false);
-        btnSem.setBackground(Color.ORANGE);
+        btnSem.setBackground(color);
         area.setText("");
-    }
-
-    private void activar() {
-
     }
 
     private JMenuBar createMenuBar() {
         JMenuBar mb = new JMenuBar();
         JMenu mnArchivo = new JMenu("Archivo");
+        JMenu mnAyuda = new JMenu("Ayuda");
+
+        JMenuItem ayuda = new JMenuItem("Ayuda");
+        JMenuItem about = new JMenuItem("Acerca de");
+
+        mnAyuda.add(ayuda);
+        mnAyuda.add(about);
+
         JMenuItem open = new JMenuItem("Abrir archivo");
         mnArchivo.add(open);
         open.addActionListener(e -> abrirArchivo());
@@ -104,6 +132,7 @@ public class Gui extends JFrame {
         mnArchivo.add(guardar);
         guardar.addActionListener(e -> guardarUi());
         mb.add(mnArchivo);
+        mb.add(mnAyuda);
 
         btnLex = new JButton("Lexico");
         btnLex.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -123,10 +152,10 @@ public class Gui extends JFrame {
         btnSem.setEnabled(false);
         mb.add(btnSem);
 
-        JButton btnCompilar = new JButton("Compilar");
+        btnCompilar = new JButton("Compilar");
         btnCompilar.setHorizontalAlignment(SwingConstants.RIGHT);
         btnCompilar.setEnabled(false);
-        btnCompilar.addActionListener(e -> hacerLexico());
+        btnCompilar.addActionListener(e -> compilar());
         mb.add(btnCompilar);
         return mb;
     }
@@ -145,7 +174,7 @@ public class Gui extends JFrame {
 
     private void hacerSintactico() {
         PilaErrores.limpiar();
-        Sintactico sintactico = new Sintactico();
+        new Sintactico();
         if (!PilaErrores.empty())
         {
             btnSin.setBackground(Color.RED);
@@ -165,7 +194,7 @@ public class Gui extends JFrame {
     {
         guardarArchivo("temp.cm");
         try {
-            Lexico lex = new Lexico(raf);
+            new Lexico(raf);
             if (!TablaSimbolos.hayErrores())
             {
                 btnLex.setBackground(Color.RED);
@@ -176,19 +205,11 @@ public class Gui extends JFrame {
                 btnLex.setBackground(Color.GREEN);
                 btnLex.setEnabled(false);
                 btnSin.setEnabled(true);
+                btnSin.setBackground(Color.ORANGE);
                 TablaSimbolos.genData();
-                Object[][] tableData = TablaSimbolos.getData();
-                Object[] das =new Object[]{"ID","ID General","Id Tipo","Lexema","Posicion","Linea", "Valor","Clasificacion"};
-                DefaultTableModel dt = new DefaultTableModel(tableData,das);
-                JTable tabla = new JTable(dt);
-                final JDialog frame = new JDialog(this, "Tabla de simbolos", true);
-                frame.setLayout(new BorderLayout());
-                frame.getContentPane().add(new JScrollPane(tabla, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                        BorderLayout.CENTER);
-                frame.setLocationRelativeTo(null);
-                frame.pack();
-                frame.setVisible(true);
+                tableData = TablaSimbolos.getData();
+                dt = new DefaultTableModel(tableData, title);
+                table.setModel(dt);
             }
         } catch (IOException e) {
             e.printStackTrace();
