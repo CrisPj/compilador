@@ -40,6 +40,9 @@ public class TablaSimbolos {
        ids.put("|",53);
        ids.put("&",54);
        ids.put(";",55);
+       ids.put(">=",56);
+       ids.put("<=",57);
+       ids.put("==",58);
    }
 
 
@@ -98,7 +101,7 @@ public class TablaSimbolos {
                 id=0;
             }
             else
-                id = ids.get(tok.lexema) == null ? 0 : ids.get(tok.lexema);
+                id = ids.get(tok.lexema) == null ? -1 : ids.get(tok.lexema);
 
             data[index][0] = tok.id;
             data[index][1] = tok.tipo.ordinal();

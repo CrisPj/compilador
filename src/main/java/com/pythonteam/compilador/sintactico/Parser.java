@@ -78,6 +78,12 @@ public class Parser {
             consume(30);
             consume(55);
             return new Print(text);
+        }else if (obtenerPrimero().getTipo() == ID)
+        {
+            Var var = new Var(consume().getLexema());
+            consume(30);
+            consume(55);
+            return new Print(var);
         }
 
         else PilaErrores.addError(200,obtenerPrimero().getLinea(),obtenerPrimero().getPosicion());
@@ -99,9 +105,7 @@ public class Parser {
         consume(31);
         Expresion condicion = parseExpr();
         consume(30);
-       // consume(33);
         Sentencia then = parseSentencia();
-       // consume(32);
         if (obtenerPrimero().getidGen() == 1)
         {
             consume(1);
@@ -129,7 +133,6 @@ public class Parser {
         index++;
         String nombre = consume(ID).getLexema();
         consume(45);
-        //consume(ASSIGN);
         Expresion expr = parseExpr();
         Sentencia decl = new Declaracion(nombre, tipo, expr);
         consume(55);
@@ -146,6 +149,7 @@ public class Parser {
             case 50:
             case 56:
             case 57:
+            case 58:
                 consume();
                 Expresion der = parseMathexpr();
                 return new BinOp(izquierda, op.getLexema(), der);
@@ -240,19 +244,6 @@ public class Parser {
             return actual;
         }
 
-    }
-
-    private Tipo parseTipo(String tipo) {
-        Token t = consume(IDENTIFIER);
-        if (t.getTipo() == Tipo.Numero) {
-            return Tipo.Numero;
-        } else if (t.getTipo() == Tipo.Texto) {
-            return Tipo.Texto;
-        }
-        return Tipo.ERROR;
-// else {
-//            return fail(t.text + " is not a known type");
-//        }
     }
 
     private Token obtenerSegundo() {

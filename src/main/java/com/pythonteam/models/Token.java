@@ -11,7 +11,6 @@ public class Token {
     int posicion;
     int linea;
     Object valor;
-    String clasificacion;
 
     public Token(Tipo tipo, String lexema, int linea, int posicion) {
         this.tipo = tipo;
@@ -20,10 +19,6 @@ public class Token {
         this.linea = linea;
         if (tipo == Tipo.ID)
             this.valor = 0;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public Tipo getTipo() {
@@ -47,6 +42,11 @@ public class Token {
     }
 
     public String getLexema() {
+        return lexema;
+    }
+
+    @Override
+    public String toString() {
         return lexema;
     }
 }

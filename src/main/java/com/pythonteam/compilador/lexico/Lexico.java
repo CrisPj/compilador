@@ -368,10 +368,24 @@ public class Lexico {
         {
             return new Token(Tipo.ID, lexema, line, pos-lexema.length());
         }
-        else if (DFAOpAritmeticos.matches(""+caracter)  && lexema.length() == 0)
+        else if (caracter == '>' || caracter == '<' || caracter == '=')
         {
             lexema = ""+caracter;
             getChar();
+            if (caracter == '=')
+            {
+                lexema += caracter;
+                getChar();
+            }
+
+            return new Token(Tipo.OperadorRelacional, lexema,line,pos);
+        }
+        else if (DFAOpAritmeticos.matches(""+caracter)  && lexema.length() == 0)
+        {
+            lexema = ""+caracter;
+
+            getChar();
+
             return new Token(Tipo.OperadorAritmetico, lexema, line, pos-2);
         }
         else if (DFAOpRel.matches(""+caracter) && lexema.length() == 0)
