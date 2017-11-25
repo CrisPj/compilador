@@ -1,7 +1,7 @@
 package com.pythonteam.compilador.sintactico;
 
 import com.pythonteam.compilador.AST.*;
-import com.pythonteam.compilador.PilaErrores;
+import com.pythonteam.compilador.Errores.PilaErrores;
 import com.pythonteam.compilador.lexico.Tipo;
 import com.pythonteam.models.TablaSimbolos;
 import com.pythonteam.models.Token;
@@ -9,7 +9,6 @@ import com.pythonteam.models.Token;
 import java.util.ArrayList;
 
 import static com.pythonteam.compilador.lexico.Tipo.*;
-import static org.fife.ui.rsyntaxtextarea.TokenTypes.IDENTIFIER;
 
 public class Parser {
     private final ArrayList<Token> tokens;

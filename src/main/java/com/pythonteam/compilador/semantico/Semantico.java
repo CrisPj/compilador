@@ -1,7 +1,7 @@
 package com.pythonteam.compilador.semantico;
 
 import com.pythonteam.compilador.AST.*;
-import com.pythonteam.compilador.PilaErrores;
+import com.pythonteam.compilador.Errores.PilaErrores;
 import com.pythonteam.compilador.sintactico.Bloque;
 import com.pythonteam.compilador.sintactico.Declaracion;
 

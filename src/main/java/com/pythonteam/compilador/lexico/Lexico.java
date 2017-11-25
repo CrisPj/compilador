@@ -19,10 +19,10 @@ public class Lexico {
     private final DFA DFADelim;
     private DFA numero;
     private RandomAccessFile buffer = null;
-    int cont = 0;
-    int pos = 1;
-    int line = 1;
-    char caracter;
+    private int cont = 0;
+    private int pos = 1;
+    private int line = 1;
+    private char caracter;
     static
     {
         delimitadores = new HashSet<>();
@@ -78,7 +78,7 @@ public class Lexico {
         TOpRel.addTransicion(0,1,'!');
         TOpRel.addTransicion(0,1,'&');
         TOpRel.addTransicion(0,1,'|');
-        Set<Integer> estadosFinalesOPRel = new HashSet<>(Arrays.asList(1));
+        Set<Integer> estadosFinalesOPRel = new HashSet<>(Collections.singletonList(1));
         DFAOpRel = new DFA(TOpRel, 0, estadosFinalesOPRel);
 
 
@@ -89,7 +89,7 @@ public class Lexico {
         TDelim.addTransicion(0,1,';');
         TDelim.addTransicion(0,1,'}');
         TDelim.addTransicion(0,1,',');
-        Set<Integer> estadosFinalesDelim= new HashSet<>(Arrays.asList(1));
+        Set<Integer> estadosFinalesDelim= new HashSet<>(Collections.singletonList(1));
         DFADelim = new DFA(TDelim, 0, estadosFinalesDelim);
 
 
@@ -211,7 +211,7 @@ public class Lexico {
         TID.addTransicion(1,1,'8');
         TID.addTransicion(1,1,'9');
 
-        Set<Integer> estadosFinalesId = new HashSet<>(Arrays.asList(1));
+        Set<Integer> estadosFinalesId = new HashSet<>(Collections.singletonList(1));
         DFAIDs = new DFA(TID, 0, estadosFinalesId);
 
 
@@ -238,7 +238,7 @@ public class Lexico {
         TNumero.addTransicion(1,1,'8');
         TNumero.addTransicion(1,1,'9');
 
-        Set<Integer> estadosFinalesNum = new HashSet<>(Arrays.asList(1));
+        Set<Integer> estadosFinalesNum = new HashSet<>(Collections.singletonList(1));
         numero = new DFA(TNumero, 0, estadosFinalesNum);
 
         Transiciones TpalabrasReservadas = new Transiciones();
@@ -338,78 +338,78 @@ public class Lexico {
             }
         }
         quitarEspacios();
-        String lexema = "";
+        StringBuilder lexema = new StringBuilder();
         if (caracter == '"')
         {
-            lexema+=caracter;
+            lexema.append(caracter);
             getChar();
             while (caracter != '"')
             {
-                lexema +=caracter;
+                lexema.append(caracter);
                 getChar();
                 if (caracter == '\uFFFF')
                     return new Token(Tipo.ERROR, "ERROR",line, pos);
             }
-            lexema+=caracter;
+            lexema.append(caracter);
             getChar();
-            return new Token(Tipo.Texto,lexema,line,pos);
+            return new Token(Tipo.Texto, lexema.toString(),line,pos);
         }
         while (!delimitadores.contains(caracter))
         {
-            lexema+=caracter;
+            lexema.append(caracter);
             getChar();
         }
 
-        if (palabrasReservadas.matches(lexema))
-            return new Token(Tipo.PalabraReservada, lexema, line, pos-2);
-        else if (numero.matches(lexema))
-            return new Token(Tipo.Numero, lexema, line, pos-2);
-        else if (DFAIDs.matches(lexema))
+        if (palabrasReservadas.matches(lexema.toString()))
+            return new Token(Tipo.PalabraReservada, lexema.toString(), line, pos-2);
+        else if (numero.matches(lexema.toString()))
+            return new Token(Tipo.Numero, lexema.toString(), line, pos-2);
+        else if (DFAIDs.matches(lexema.toString()))
         {
-            return new Token(Tipo.ID, lexema, line, pos-lexema.length());
+            return new Token(Tipo.ID, lexema.toString(), line, pos-lexema.length());
         }
         else if (caracter == '>' || caracter == '<' || caracter == '=')
         {
-            lexema = ""+caracter;
+            lexema = new StringBuilder("" + caracter);
             getChar();
             if (caracter == '=')
             {
-                lexema += caracter;
+                lexema.append(caracter);
                 getChar();
             }
 
-            return new Token(Tipo.OperadorRelacional, lexema,line,pos);
+            return new Token(Tipo.OperadorRelacional, lexema.toString(),line,pos);
         }
         else if (DFAOpAritmeticos.matches(""+caracter)  && lexema.length() == 0)
         {
-            lexema = ""+caracter;
+            lexema = new StringBuilder("" + caracter);
 
             getChar();
 
-            return new Token(Tipo.OperadorAritmetico, lexema, line, pos-2);
+            return new Token(Tipo.OperadorAritmetico, lexema.toString(), line, pos-2);
         }
         else if (DFAOpRel.matches(""+caracter) && lexema.length() == 0)
         {
-            lexema = ""+caracter;
+            lexema = new StringBuilder("" + caracter);
             getChar();
-            return new Token(Tipo.OperadorRelacional, lexema, line, pos-2);
+            return new Token(Tipo.OperadorRelacional, lexema.toString(), line, pos-2);
         }
         else if (DFADelim.matches(""+caracter) && lexema.length() == 0)
         {
-            lexema = ""+caracter;
+            lexema = new StringBuilder("" + caracter);
             getChar();
-            return new Token(Tipo.Delimitador, lexema, line, pos-2);
+            return new Token(Tipo.Delimitador, lexema.toString(), line, pos-2);
         }
         else if (caracter == '\uFFFF'&& lexema.length() == 0)
         {
-            lexema = ""+caracter;
+            lexema = new StringBuilder("" + caracter);
             getChar();
-            return new Token(Tipo.EOF,lexema,line,pos-2);
+            return new Token(Tipo.EOF, lexema.toString(),line,pos-2);
         }
         else
         {
             getChar();
-            return new Token(Tipo.ERROR,lexema,line,pos - lexema.length());
+            return new Token(Tipo.ERROR, lexema.toString(),line,pos - lexema.length());
         }
 
     }

@@ -1,4 +1,4 @@
-package com.pythonteam.compilador;
+package com.pythonteam.compilador.Errores;
 
 public class Error {
     private int id;

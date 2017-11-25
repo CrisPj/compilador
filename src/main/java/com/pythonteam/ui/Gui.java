@@ -1,7 +1,7 @@
 package com.pythonteam.ui;
 
 import com.pythonteam.compilador.AST.Sentencia;
-import com.pythonteam.compilador.PilaErrores;
+import com.pythonteam.compilador.Errores.PilaErrores;
 import com.pythonteam.compilador.lexico.Lexico;
 import com.pythonteam.compilador.semantico.Semantico;
 import com.pythonteam.compilador.sintactico.Sintactico;
@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -107,6 +106,7 @@ public class Gui extends JFrame {
     }
 
     private void activarBotones() {
+        PilaErrores.limpiar();
         btnLex.setEnabled(true);
         btnLex.setBackground(Color.ORANGE);
         btnSin.setEnabled(false);
@@ -187,7 +187,7 @@ public class Gui extends JFrame {
             btnSin.setBackground(Color.RED);
             btnSin.setEnabled(false);
             area.setForeground(Color.RED);
-            area.setText(area.getText() + "\n Sintacticos" + PilaErrores.getSintacticoErrors());
+            area.setText(area.getText() + "\n Sintacticos" + PilaErrores.getErrores());
 
         }else {
             btnSin.setBackground(Color.GREEN);
@@ -203,11 +203,11 @@ public class Gui extends JFrame {
         guardarArchivo("temp.cm");
         try {
             new Lexico(raf);
-            if (!TablaSimbolos.hayErrores())
+            if (!PilaErrores.empty())
             {
                 btnLex.setBackground(Color.RED);
                 area.setForeground(Color.RED);
-                area.setText(TablaSimbolos.getErrors());
+                area.setText(PilaErrores.getErrores());
             }
             else {
                 btnLex.setBackground(Color.GREEN);
@@ -260,6 +260,17 @@ public class Gui extends JFrame {
     }
 
     private void compilar() {
-
+        guardarArchivo("temp.cm");
+        try {
+            new Lexico(raf);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Sintactico sintactico = new Sintactico();
+        objetitos = sintactico.getArbolito();
+        new Semantico(objetitos);
+        if (PilaErrores.empty())
+            btnCompilar.setBackground(Color.GREEN);
+        else btnCompilar.setBackground(Color.RED);
     }
 }

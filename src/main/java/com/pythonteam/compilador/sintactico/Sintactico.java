@@ -1,7 +1,7 @@
 package com.pythonteam.compilador.sintactico;
 
 import com.pythonteam.compilador.AST.Sentencia;
-import com.pythonteam.compilador.PilaErrores;
+import com.pythonteam.compilador.Errores.PilaErrores;
 import com.pythonteam.models.TablaSimbolos;
 import com.pythonteam.models.Token;
 

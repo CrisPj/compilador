@@ -6,7 +6,7 @@ public class Token {
 
     int id;
     Tipo tipo;
-    int idGen;
+    private int idGen;
     String lexema;
     int posicion;
     int linea;
@@ -25,7 +25,7 @@ public class Token {
         return tipo;
     }
 
-    public void setIdGen(int idGen) {
+    void setIdGen(int idGen) {
         this.idGen = idGen;
     }
 

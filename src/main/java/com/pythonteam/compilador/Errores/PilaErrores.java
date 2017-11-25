@@ -1,4 +1,4 @@
-package com.pythonteam.compilador;
+package com.pythonteam.compilador.Errores;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -29,10 +29,16 @@ public class PilaErrores {
 
     public static boolean empty() { return errores.isEmpty();  }
 
-    public static String getSintacticoErrors() {
+
+    public static void limpiar() {
+        errores.clear();
+        id = 0;
+    }
+
+    public static String getErrores() {
         String result = "\n";
         for (Error error:errores
-             ) {
+                ) {
             result += result
                     + "id: " + error.getId()
                     + " Error: " + mensajes.get(error.getIdError())
@@ -40,11 +46,5 @@ public class PilaErrores {
                     + " Pos: " + error.getPos() + "\n";
         }
 
-        return result;
-    }
-
-    public static void limpiar() {
-        errores.clear();
-        id = 0;
-    }
+        return result;    }
 }

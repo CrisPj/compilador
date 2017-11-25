@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class Transiciones {
+class Transiciones {
         private final Map<Integer, Map<Character, Integer>> function = new HashMap<>();
 
-        public void addTransicion(Integer estadoInicial, Integer estadoFinal, char caracter) {
+        void addTransicion(Integer estadoInicial, Integer estadoFinal, char caracter) {
             function.computeIfAbsent(estadoInicial, k -> new HashMap<>()).put(caracter, estadoFinal);
         }
 
@@ -17,7 +17,7 @@ public class Transiciones {
             return Optional.ofNullable(function.getOrDefault(startState, Collections.emptyMap()).get(character));
         }
 
-        public Optional<Integer> processAll(Integer startState, char[] characters) {
+        Optional<Integer> processAll(Integer startState, char[] characters) {
             return IntStream.range(0, characters.length)
                     .boxed()
                     .reduce(
