@@ -8,6 +8,9 @@ import com.pythonteam.models.Token;
 
 
 public class Sintactico {
+
+    private Sentencia sentencia;
+
     public Sintactico()
     {
         if (TablaSimbolos.size() < 3)
@@ -25,7 +28,7 @@ public class Sintactico {
                     token = TablaSimbolos.get(++i);
                     if (token.getidGen() == 30)
                     {
-                        Sentencia sentencia =  Parser.parsearSentencias();
+                        sentencia = Parser.parsearSentencias();
                     }
                     else
                     {
@@ -44,5 +47,9 @@ public class Sintactico {
                 PilaErrores.addError(200,token.getLinea(),token.getPosicion());
             break;
         }
+    }
+
+    public Sentencia getArbolito() {
+        return sentencia;
     }
 }

@@ -1,7 +1,9 @@
 package com.pythonteam.ui;
 
+import com.pythonteam.compilador.AST.Sentencia;
 import com.pythonteam.compilador.PilaErrores;
 import com.pythonteam.compilador.lexico.Lexico;
+import com.pythonteam.compilador.semantico.Semantico;
 import com.pythonteam.compilador.sintactico.Sintactico;
 import com.pythonteam.models.TablaSimbolos;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -46,6 +48,7 @@ public class Gui extends JFrame {
     private Object[][] tableData;
     private final Object[] title;
     private JButton btnCompilar;
+    private Sentencia objetitos;
 
     public Gui(){
         JPanel cp = new JPanel();
@@ -169,12 +172,16 @@ public class Gui extends JFrame {
     }
 
     private void hacerSemantico() {
-        JOptionPane.showMessageDialog(this,"En construccion");
+        new Semantico(objetitos);
+        if (!PilaErrores.empty())
+        {
+            btnSem.setBackground(Color.red);
+        }
     }
 
     private void hacerSintactico() {
         PilaErrores.limpiar();
-        new Sintactico();
+        Sintactico sintactico = new Sintactico();
         if (!PilaErrores.empty())
         {
             btnSin.setBackground(Color.RED);
@@ -185,6 +192,7 @@ public class Gui extends JFrame {
         }else {
             btnSin.setBackground(Color.GREEN);
             btnSin.setEnabled(false);
+            objetitos = sintactico.getArbolito();
             btnSem.setBackground(Color.ORANGE);
             btnSem.setEnabled(true);
         }
