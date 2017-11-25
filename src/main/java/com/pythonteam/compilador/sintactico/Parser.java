@@ -193,10 +193,10 @@ public class Parser {
 
     private Expresion parseFactor() {
         Token token = consume();
-        if (token.getidGen() == 33)
+        if (token.getidGen() == 31)
         {
             Expresion e = parseExpr();
-            consume(32);
+            consume(30);
             return e;
         }
         else

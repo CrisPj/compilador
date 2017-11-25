@@ -5,8 +5,8 @@ import com.pythonteam.compilador.AST.Expresion;
 import com.pythonteam.compilador.AST.Sentencia;
 
 public class Asignacion implements Sentencia {
-    private final String nombre;
-    private final Expresion exp;
+    public final String nombre;
+    public final Expresion exp;
 
     public Asignacion(String nombre, Expresion exp) {
         this.nombre = nombre;

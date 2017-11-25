@@ -2,8 +2,7 @@ package com.pythonteam.compilador.semantico;
 
 import com.pythonteam.compilador.AST.*;
 import com.pythonteam.compilador.Errores.PilaErrores;
-import com.pythonteam.compilador.sintactico.Bloque;
-import com.pythonteam.compilador.sintactico.Declaracion;
+import com.pythonteam.compilador.sintactico.*;
 
 import java.util.HashMap;
 
@@ -41,6 +40,35 @@ public class Semantico {
 
         }
 
+        @Override
+        public void visitar(IfStmt ifStmt) {
+            super.visitar(ifStmt);
+        }
+
+        @Override
+        public void visitar(UnaryOp unaryOp) {
+            unaryOp.operando.aceptar(this);
+
+            if (tipo == null)
+                PilaErrores.addSemantico(unaryOp.opNombre + "No puede ser null");
+
+        }
+
+        @Override
+        public void visitar(Asignacion asignacion) {
+            Tipo tipoVar = pilaSemantica.get(asignacion.nombre);
+            if (tipoVar == null)
+            {
+                PilaErrores.addSemantico("Variable no declarada");
+            }
+            asignacion.exp.aceptar(this);
+            if (!checarTipo(tipo,tipoVar))
+            {
+                PilaErrores.addSemantico("No se puede asignar " + tipo.toString());
+            }
+            tipo = new TipoNull();
+        }
+
         private boolean checarTipo(Tipo tipo1, Tipo tipo2) {
             return tipo1.equals(tipo2);
         }
@@ -57,6 +85,28 @@ public class Semantico {
         @Override
         public void visitar(IntConst intConst) {
             tipo = TipoInt.instance;
+        }
+
+        @Override
+        public void visitar(Var var) {
+            tipo = pilaSemantica.get(var.name);
+            if (tipo == null)
+            {
+                PilaErrores.addSemantico("Variable desnococida" + var.name);
+            }
+        }
+
+        @Override
+        public void visitar(BinOp binOp) {
+            binOp.izquierda.aceptar(this);
+            Tipo tIzq = tipo;
+            binOp.derecha.aceptar(this);
+            Tipo tDer = tipo;
+            if (!checarTipo(tIzq,tDer))
+            {
+                PilaErrores.addSemantico("Tipo incompatibles en " + binOp.nombre);
+            }
+            tipo = new TipoNull();
         }
 
         @Override

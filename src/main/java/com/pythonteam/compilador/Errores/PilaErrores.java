@@ -39,12 +39,15 @@ public class PilaErrores {
         String result = "\n";
         for (Error error:errores
                 ) {
-            result += result
-                    + "id: " + error.getId()
+            result += "id: " + error.getId()
                     + " Error: " + mensajes.get(error.getIdError())
                     + " linea: " + error.getLinea()
                     + " Pos: " + error.getPos() + "\n";
         }
 
         return result;    }
+
+    public static void addSemantico(String error) {
+        addError(300,0,0);
+    }
 }

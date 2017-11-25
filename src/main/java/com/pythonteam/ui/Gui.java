@@ -187,7 +187,7 @@ public class Gui extends JFrame {
             btnSin.setBackground(Color.RED);
             btnSin.setEnabled(false);
             area.setForeground(Color.RED);
-            area.setText(area.getText() + "\n Sintacticos" + PilaErrores.getErrores());
+            area.setText("\n Sintacticos" + PilaErrores.getErrores());
 
         }else {
             btnSin.setBackground(Color.GREEN);
