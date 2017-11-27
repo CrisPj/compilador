@@ -78,7 +78,7 @@ public class Parser {
             Var var = new Var(consume().getLexema());
             consume(30);
             consume(55);
-            return new Print(var);
+            return new Read(var);
         } else PilaErrores.addError(200,obtenerPrimero().getLinea(),obtenerPrimero().getPosicion());
 
         return null;
@@ -166,6 +166,7 @@ public class Parser {
             case 56:
             case 57:
             case 58:
+            case 59:
                 consume();
                 Expresion der = parseMathexpr();
                 return new BinOp(izquierda, op.getLexema(), der);

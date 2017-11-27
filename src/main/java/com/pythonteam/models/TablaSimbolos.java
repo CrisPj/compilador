@@ -46,6 +46,7 @@ public class TablaSimbolos {
         ids.put(">=", 56);
         ids.put("<=", 57);
         ids.put("==", 58);
+        ids.put("!=", 59);
     }
 
 

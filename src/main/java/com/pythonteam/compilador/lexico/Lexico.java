@@ -368,7 +368,7 @@ public class Lexico {
         {
             return new Token(Tipo.ID, lexema.toString(), line, pos-lexema.length());
         }
-        else if (caracter == '>' || caracter == '<' || caracter == '=')
+        else if (caracter == '>' || caracter == '<' || caracter == '=' || caracter == '!')
         {
             lexema = new StringBuilder("" + caracter);
             getChar();

@@ -16,6 +16,7 @@ import com.pythonteam.compilador.sintactico.Declaracion;
 import com.pythonteam.compilador.sintactico.UnaryOp;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Semantico {
     public Semantico(Sentencia objetitos) {
@@ -87,6 +88,8 @@ public class Semantico {
 
             if (tipo == null)
                 PilaErrores.addSemantico(unaryOp.opNombre + "No puede ser null");
+            if (!Objects.equals(unaryOp.opNombre, "!"))
+            tipo = TipoInt.instance;
 
         }
 
