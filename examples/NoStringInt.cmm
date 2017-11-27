@@ -1,0 +1,16 @@
+//Programa que reasigna una variable de tipo string a un valor numerico
+main() {
+	int x = 4;
+	string y = "correcto";
+	boolean z = x == 4;
+	y = 3;
+
+	while(z == true)
+	{
+		if(x==4)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}

@@ -176,6 +176,12 @@ public class Gui extends JFrame {
         if (!PilaErrores.empty())
         {
             btnSem.setBackground(Color.red);
+            area.setForeground(Color.RED);
+            area.setText("\n Semanticos" + PilaErrores.getErrores());
+        }
+        else
+        {
+            btnSem.setBackground(Color.GREEN);
         }
     }
 

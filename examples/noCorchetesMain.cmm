@@ -1,0 +1,15 @@
+//Error donde se cuenta con el simbolo main, pero no se cuenta con los corchetes
+main {
+	int x = 4;
+	string y = "correcto";
+	boolean z = x == 4;
+
+	while(z == true)
+	{
+		if(x==4)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}

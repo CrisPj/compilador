@@ -1,0 +1,16 @@
+//Programa que en la asignacion de una variable se usa el resultado de
+//una operacion que le falta un signo
+main() {
+	int x = 1+4-;
+	string y = "correcto";
+	boolean z = x == 4;
+
+	while(z == true)
+	{
+		if(x==4)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}

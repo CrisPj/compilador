@@ -1,0 +1,12 @@
+// Error donde no se cuenta con el punto de entrada main
+int x = 4;
+string y = "correcto";
+boolean z = x == 4;
+while(z == true)
+{
+	if(x==4)
+	{
+		z = false;
+		print(y);
+	}
+}

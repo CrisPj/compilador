@@ -65,7 +65,24 @@ public class Parser {
     }
 
     private Sentencia parseRead() {
+        consume(7);
+        consume(31);
+        if (obtenerPrimero().getTipo() == Numero)
+        {
+            int text = Integer.parseInt(consume().getLexema());
+            consume(30);
+            consume(55);
+            return new Read(text);
+        }else if (obtenerPrimero().getTipo() == ID)
+        {
+            Var var = new Var(consume().getLexema());
+            consume(30);
+            consume(55);
+            return new Print(var);
+        } else PilaErrores.addError(200,obtenerPrimero().getLinea(),obtenerPrimero().getPosicion());
+
         return null;
+
     }
 
     private Sentencia parsePrint() {
