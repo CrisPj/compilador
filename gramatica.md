@@ -1,3 +1,6 @@
+# Gramatica para C menos
+
+```
 programa = 'main', '(', ')', sentencia;
 sentencia = bloque | if | while | read | while | print 
                    | asignacion | declaracion | expresion;
@@ -35,3 +38,4 @@ letra  = "A" | "B" | "C" | "D" | "E" | "F" | "G"
 
 numero = digito, { digito } ;
 digito = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+```
