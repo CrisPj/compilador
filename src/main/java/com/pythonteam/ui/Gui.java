@@ -262,7 +262,9 @@ public class Gui extends JFrame {
     }
 
     private void abrirArchivo() {
+
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("./examples"));
         int result = fileChooser.showOpenDialog(this);
         if (result==JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();

@@ -9,6 +9,6 @@ public class TipoString extends Tipo{
 
     @Override
     public String toString() {
-        return "String";
+        return "string";
     }
 }

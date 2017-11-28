@@ -8,6 +8,6 @@ public class TipoInt  extends Tipo{
 
     @Override
     public String toString() {
-        return "Integer";
+        return "int";
     }
 }

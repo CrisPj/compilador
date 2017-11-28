@@ -1,0 +1,15 @@
+//Programa que en una variable de tipo bool se le asigna un valo de tipo int
+main() {
+	int x = 4;
+	string y = "";
+	boolean z = 3;
+
+	while(z==false)
+	{
+		if(z)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}

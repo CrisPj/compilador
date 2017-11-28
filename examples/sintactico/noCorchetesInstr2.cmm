@@ -1,0 +1,15 @@
+//Programa que marca error por que le hace falta un corchete en una instruccion
+main() {
+	int x = 4+1+7);
+	string y = "correcto";
+	boolean z = x == 4;
+
+	while(z == true)
+	{
+		if(x==4)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}

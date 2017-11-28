@@ -30,4 +30,9 @@ public class Declaracion implements Sentencia {
     public void aceptar(ASTVisitante v){
         v.visitar(this);
     }
+
+    @Override
+    public String toString() {
+        return tipo.toString() + " " + nombre + " = " + exp.toString();
+    }
 }

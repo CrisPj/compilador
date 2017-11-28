@@ -5,4 +5,9 @@ public class TipoBool extends Tipo{
 
     private TipoBool() {
     }
+
+    @Override
+    public String toString() {
+        return "bool";
+    }
 }

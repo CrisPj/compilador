@@ -1,0 +1,15 @@
+//Programa que se define una string con un valor booleano
+main() {
+	int x = 4;
+	string y = true;
+	boolean z = x == 4;
+
+	while(z == true)
+	{
+		if(x==4)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}

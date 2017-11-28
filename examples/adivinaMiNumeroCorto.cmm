@@ -1,20 +1,16 @@
 //Programa que imprime el mensaje correcto, usando ciclos e if
 main() {
 	int x = 4;
-	string msg1 = "Adivina el numero del 1 al 10:";
-	print(msg1);
+	print("Adivina el numero del 1 al 10:");
 	int numUsuario = 0;
 	read(numUsuario);
 	while(x != numUsuario)
 	{
 		if(x > numUsuario)
-		{
 			print("Numero mayor prueba de nuevo");
-		}
+		
 		if(x < numUsuario)
-		{
 			print("Numero menor prueba de nuevo");
-		}
 		read(numUsuario);
 	}
 	print("haz ganado");

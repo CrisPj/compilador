@@ -32,13 +32,13 @@ public class Semantico {
         @Override
         public void visitar(Declaracion declaracion) {
             if (pilaSemantica.containsKey(declaracion.nombre)) {
-                PilaErrores.addError(400,0,0);
+                PilaErrores.addSemantico("no existe la declaracion");
             }
             pilaSemantica.put(declaracion.nombre, declaracion.tipo);
 
             declaracion.exp.aceptar(this);
             if (!checarTipo(tipo, declaracion.tipo)) {
-                PilaErrores.addError(400,0,0);
+                PilaErrores.addSemantico(tipo.toString() + "  es diferente de " + declaracion.tipo.toString() + " en " + declaracion.toString());
             }
 
             tipo = new TipoNull();
@@ -166,7 +166,13 @@ public class Semantico {
             {
                 PilaErrores.addSemantico("Tipo incompatibles en " + binOp.nombre);
             }
-            else tipo=TipoBool.instance;
+            if(Objects.equals(binOp.nombre, "+") || Objects.equals(binOp.nombre, "-") || Objects.equals(binOp.nombre, "/") || Objects.equals(binOp.nombre, "*"))
+                tipo = TipoInt.instance;
+            else if (Objects.equals(binOp.nombre, "==") || Objects.equals(binOp.nombre, ">=") || Objects.equals(binOp.nombre, "<=") || Objects.equals(binOp.nombre, "!=")
+                    || Objects.equals(binOp.nombre, "||") || Objects.equals(binOp.nombre, "&&")
+                    || Objects.equals(binOp.nombre, "<") || Objects.equals(binOp.nombre, ">") )
+                tipo = TipoBool.instance;
+
         }
 
         @Override

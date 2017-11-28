@@ -1,0 +1,15 @@
+//Programa que se define un int con valor de string 
+main() {
+	int x = "asd";
+	string y = "true";
+	boolean z = x == 4;
+
+	while(z == true)
+	{
+		if(x==4)
+		{
+			z = false;
+			print(y);
+		}
+	}
+}
