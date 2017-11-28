@@ -17,9 +17,7 @@ public class Parser {
 
     public static Sentencia parsearSentencias() {
         Parser parser = new Parser();
-        Sentencia sentencia = parser.parseSentencia();
-        //parser.consume(EOF);
-        return sentencia;
+        return parser.parseSentencia();
     }
 
     private Sentencia parseSentencia() {
@@ -161,6 +159,8 @@ public class Parser {
         switch (op.getidGen()) {
             case 45:
             case 52:
+            case 53:
+            case 54:
             case 51:
             case 50:
             case 56:

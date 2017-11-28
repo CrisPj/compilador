@@ -40,8 +40,8 @@ public class TablaSimbolos {
         ids.put(">", 50);
         ids.put("<", 51);
         ids.put("!", 52);
-        ids.put("|", 53);
-        ids.put("&", 54);
+        ids.put("||", 53);
+        ids.put("&&", 54);
         ids.put(";", 55);
         ids.put(">=", 56);
         ids.put("<=", 57);

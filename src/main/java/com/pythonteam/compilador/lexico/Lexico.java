@@ -5,17 +5,13 @@ import com.pythonteam.models.Token;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Lexico {
 
     private final static Set<Character> delimitadores;
     private final DFA DFAIDs;
     private final DFA DFAOpAritmeticos;
-    private final DFA DFAOpRel;
     private final DFA DFADelim;
     private DFA numero;
     private RandomAccessFile buffer = null;
@@ -70,16 +66,6 @@ public class Lexico {
         TOperadoresAritmeticos.addTransicion(0,1,'/');
         Set<Integer> estadosFinalesOPArit = new HashSet<>(Collections.singletonList(1));
         DFAOpAritmeticos = new DFA(TOperadoresAritmeticos, 0, estadosFinalesOPArit);
-
-
-        Transiciones TOpRel = new Transiciones();
-        TOpRel.addTransicion(0,1,'<');
-        TOpRel.addTransicion(0,1,'>');
-        TOpRel.addTransicion(0,1,'!');
-        TOpRel.addTransicion(0,1,'&');
-        TOpRel.addTransicion(0,1,'|');
-        Set<Integer> estadosFinalesOPRel = new HashSet<>(Collections.singletonList(1));
-        DFAOpRel = new DFA(TOpRel, 0, estadosFinalesOPRel);
 
 
         Transiciones TDelim = new Transiciones();
@@ -368,17 +354,22 @@ public class Lexico {
         {
             return new Token(Tipo.ID, lexema.toString(), line, pos-lexema.length());
         }
-        else if (caracter == '>' || caracter == '<' || caracter == '=' || caracter == '!')
+        else if (caracter == '>' || caracter == '<' || caracter == '=' || caracter == '!' || caracter == '&' || caracter == '|')
         {
             lexema = new StringBuilder("" + caracter);
             getChar();
-            if (caracter == '=')
+            if (caracter == '=' || caracter == '&' || caracter == '|')
             {
                 lexema.append(caracter);
                 getChar();
+                return new Token(Tipo.OperadorRelacional, lexema.toString(),line,pos);
             }
+            if (Objects.equals(lexema.toString(),"="))
+                return new Token(Tipo.OperadorAritmetico, lexema.toString(),line,pos);
 
+            if (Objects.equals(lexema.toString(),">") | Objects.equals(lexema.toString(),"<"))
             return new Token(Tipo.OperadorRelacional, lexema.toString(),line,pos);
+            return new Token(Tipo.ERROR, lexema.toString(), line,pos);
         }
         else if (DFAOpAritmeticos.matches(""+caracter)  && lexema.length() == 0)
         {
@@ -387,12 +378,6 @@ public class Lexico {
             getChar();
 
             return new Token(Tipo.OperadorAritmetico, lexema.toString(), line, pos-2);
-        }
-        else if (DFAOpRel.matches(""+caracter) && lexema.length() == 0)
-        {
-            lexema = new StringBuilder("" + caracter);
-            getChar();
-            return new Token(Tipo.OperadorRelacional, lexema.toString(), line, pos-2);
         }
         else if (DFADelim.matches(""+caracter) && lexema.length() == 0)
         {

@@ -1,3 +1,4 @@
+//Programa que imprime el mensaje correcto, usando ciclos e if
 main() {
 	int x = 4;
 	string y = "correcto";
