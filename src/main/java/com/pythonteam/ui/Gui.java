@@ -25,9 +25,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -122,7 +120,9 @@ public class Gui extends JFrame {
         JMenu mnAyuda = new JMenu("Ayuda");
 
         JMenuItem ayuda = new JMenuItem("Ayuda");
+        ayuda.addActionListener(e -> abrirAyuda());
         JMenuItem about = new JMenuItem("Acerca de");
+        about.addActionListener(e -> abrirAbout());
 
         mnAyuda.add(ayuda);
         mnAyuda.add(about);
@@ -161,6 +161,21 @@ public class Gui extends JFrame {
         btnCompilar.addActionListener(e -> compilar());
         mb.add(btnCompilar);
         return mb;
+    }
+
+    private void abrirAbout() {
+
+    }
+
+    private void abrirAyuda() {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File myFile = new File("ayuda.pdf");
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException ex) {
+                System.out.println("No se puede abrir el pdf");
+            }
+        }
     }
 
     private void guardarUi() {
