@@ -3,6 +3,7 @@ package com.pythonteam.compilador.Errores;
 public class Error {
     private int id;
     private int idError;
+    private String mensaje;
     private int linea;
     private int pos;
 
@@ -11,6 +12,15 @@ public class Error {
         this.idError = idError;
         this.linea = linea;
         this.pos = pos;
+    }
+
+
+    public Error(int id, int idError, int linea, int pos, String mensaje) {
+        this.id = id;
+        this.idError = idError;
+        this.linea = linea;
+        this.pos = pos;
+        this.mensaje = mensaje;
     }
 
     public int getIdError() {
@@ -43,5 +53,13 @@ public class Error {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 }

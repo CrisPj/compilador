@@ -5,4 +5,9 @@ public class TipoInt  extends Tipo{
 
     public TipoInt() {
     }
+
+    @Override
+    public String toString() {
+        return "Integer";
+    }
 }

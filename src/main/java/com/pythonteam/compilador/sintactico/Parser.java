@@ -100,7 +100,15 @@ public class Parser {
             return new Print(var);
         }
 
-        else PilaErrores.addError(200,obtenerPrimero().getLinea(),obtenerPrimero().getPosicion());
+        else
+        {
+            int linea = obtenerPrimero().getLinea();
+            int pos = obtenerPrimero().getPosicion();
+            consume();
+            consume(30);
+            consume(55);
+            PilaErrores.addError(205,linea,pos);
+        }
 
         return null;
     }
@@ -301,7 +309,7 @@ public class Parser {
             index++;
             return actual;
         } else {
-            PilaErrores.addError(205,actual.getLinea(),actual.getPosicion());
+            PilaErrores.addError(0,actual.getLinea(),actual.getPosicion(),"Se esperaba" + actual.getTipo().name());
             return actual;
         }
     }

@@ -7,8 +7,8 @@ public abstract class ASTVisitante {
     public void visitar(Bloque bloque) {}
     public void visitar(SentenciaVacia sentenciaVacia) {}
     public void visitar(WhileLoop whileLoop) {}
-    public void visitar(Print whileLoop) {}
-    public void visitar(Read whileLoop) {}
+    public void visitar(Print print) {}
+    public void visitar(Read read) {}
 
     public void visitar(BoolConst boolConst) {}
     public void visitar(IntConst intConst) {}

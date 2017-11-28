@@ -23,5 +23,6 @@ public class Tipos {
 
         tipos.put("print", TipoString.instance);
         tipos.put("read", TipoInt.instance);
+        tipos.put("read", TipoString.instance);
     }
 }

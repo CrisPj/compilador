@@ -1,13 +1,6 @@
 package com.pythonteam.compilador.semantico;
 
-import com.pythonteam.compilador.AST.ASTVisitante;
-import com.pythonteam.compilador.AST.BoolConst;
-import com.pythonteam.compilador.AST.IntConst;
-import com.pythonteam.compilador.AST.Sentencia;
-import com.pythonteam.compilador.AST.SentenciaIf;
-import com.pythonteam.compilador.AST.StringConst;
-import com.pythonteam.compilador.AST.Var;
-import com.pythonteam.compilador.AST.WhileLoop;
+import com.pythonteam.compilador.AST.*;
 import com.pythonteam.compilador.Errores.PilaErrores;
 import com.pythonteam.compilador.sintactico.Asignacion;
 import com.pythonteam.compilador.sintactico.BinOp;
@@ -53,11 +46,38 @@ public class Semantico {
         }
 
         @Override
+        public void visitar(Read read) {
+            if (read.var!=null)
+            {
+                read.var.aceptar(this);
+            }
+            if (tipo != TipoInt.instance)
+            {
+                PilaErrores.addSemantico("Read solo acepta variables del tipo Int");
+            }
+            tipo = new TipoNull();
+        }
+
+        @Override
+        public void visitar(Print print) {
+            if (print.var!=null)
+            {
+                print.var.aceptar(this);
+            }
+            else tipo=TipoString.instance;
+            if (tipo != TipoString.instance)
+            {
+                PilaErrores.addSemantico("Print solo acepta string");
+            }
+            tipo = new TipoNull();
+        }
+
+        @Override
         public void visitar(WhileLoop whileLoop) {
             whileLoop.condicion.aceptar(this);
             if (tipo != TipoBool.instance)
             {
-                PilaErrores.addSemantico("While debe ser bool");
+                PilaErrores.addSemantico("la condicion de While debe ser bool");
             }
             pilaSemantica.pushBloque();
             whileLoop.sentencias.aceptar(this);
@@ -131,7 +151,8 @@ public class Semantico {
             tipo = pilaSemantica.get(var.name);
             if (tipo == null)
             {
-                PilaErrores.addSemantico("Variable desnococida" + var.name);
+                PilaErrores.addSemantico("Variable desnococida " + var.name);
+                tipo = new TipoNull();
             }
         }
 

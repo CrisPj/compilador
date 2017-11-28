@@ -17,6 +17,8 @@ public class PilaErrores {
         mensajes.put(202,"Se esperaba un patentesis ')'");
         mensajes.put(203,"Se esperaba una llave '}'");
         mensajes.put(204,"Se esperaba un llave '{'");
+        mensajes.put(205,"Se esperaba un String o identificador");
+        mensajes.put(204,"Se esperaba un llave '{'");
         mensajes.put(204,"Valor no esperado");
 
     }
@@ -24,7 +26,13 @@ public class PilaErrores {
 
     public static void addError(int idError, int linea, int pos)
     {
-      errores.add(new Error(id++, idError, linea, pos));
+        String msg = mensajes.get(idError);
+      errores.add(new Error(id++, idError, linea, pos,msg));
+    }
+
+    public static void addError(int idError, int linea, int pos, String msg)
+    {
+        errores.add(new Error(id++, idError, linea, pos, msg));
     }
 
     public static boolean empty() { return errores.isEmpty();  }
@@ -40,7 +48,7 @@ public class PilaErrores {
         for (Error error:errores
                 ) {
             result += "id: " + error.getId()
-                    + " Error: " + mensajes.get(error.getIdError())
+                    + " Error: " + error.getMensaje()
                     + " linea: " + error.getLinea()
                     + " Pos: " + error.getPos() + "\n";
         }
@@ -48,6 +56,6 @@ public class PilaErrores {
         return result;    }
 
     public static void addSemantico(String error) {
-        addError(300,0,0);
+        addError(300,0,0, error);
     }
 }

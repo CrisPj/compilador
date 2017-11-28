@@ -2,7 +2,7 @@ package com.pythonteam.compilador.AST;
 
 public class Read implements Sentencia{
     private int mensaje;
-    private Var var;
+    public Var var;
 
     public Read(Var var) {
         this.var = var;
