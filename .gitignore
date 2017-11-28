@@ -5,3 +5,6 @@ temp.cm
 .project
 .settings/
 *.iml
+build/
+gradle/
+.gradle/

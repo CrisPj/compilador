@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+group = 'groupId'
+version = '1.0-SNAPSHOT'
+
+description = """"""
+mainClassName = "com.pythonteam.Main"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    baseName = 'compilador'
+    manifest {
+        attributes 'Main-Class': 'com.pythonteam.Main'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile 'com.fifesoft:rsyntaxtextarea:2.6.1'
+}

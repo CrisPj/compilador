@@ -221,7 +221,7 @@ public class Gui extends JFrame {
 
     private void hacerLexico()
     {
-        guardarArchivo("temp.cm");
+        guardarArchivo(System.getProperty("java.io.tmpdir")+"/temp.cm");
         try {
             new Lexico(raf);
             if (!PilaErrores.empty())
